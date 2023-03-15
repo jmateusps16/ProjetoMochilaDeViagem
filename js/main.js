@@ -12,31 +12,49 @@ form.addEventListener("submit", (evento) => {
     const nome = evento.target.elements['nome'];
     const quantidade = evento.target.elements['quantidade'];
 
+    const existe = itens.find(elemento => elemento.nome === nome.value);
+
+    console.log(existe);
+
     const itemAtual = {
         "nome": nome.value,
         "quantidade": quantidade.value
-    }
+    };
 
-    criaElemento(itemAtual);
+    if (existe) {
+        itemAtual.id = existe.id;
 
-    itens.push(itemAtual);
+        atualizaElemento(itemAtual);
+    } else {
+        itemAtual.id = itens.length;
+
+        criaElemento(itemAtual);
+
+        itens.push(itemAtual);
+    };
 
     localStorage.setItem("itens", JSON.stringify(itens));
-    
+
     nome.value = "";
     quantidade.value = "";
 })
 
-function criaElemento(obj) {
+function criaElemento(item) {
     const novoItem = document.createElement('li'); //Cria novo Elemento
     novoItem.classList.add('item'); //adiciona a classe ao elemento criado
 
     const numeroItem = document.createElement('strong'); //Cria novo Elemento
-    numeroItem.innerHTML = obj.quantidade; //adiciona dentro do novo item a quantidade
+    numeroItem.innerHTML = item.quantidade; //adiciona dentro do novo item a quantidade
+
+    numeroItem.dataset.id = item.id;
 
     novoItem.appendChild(numeroItem); //adiciona dentro do novoItem o filho numeroItem
-    novoItem.innerHTML += obj.nome; //adiciona o valor dentro de novo item
+    novoItem.innerHTML += item.nome; //adiciona o valor dentro de novo item
 
     lista.appendChild(novoItem); //Adiciona a lista existente o filho novoItem
 
+}
+
+function atualizaElemento(item) {
+    document.querySelector("[data-id='"+item.id+"']").innerHTML = item.quantidade;
 }
