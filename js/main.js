@@ -50,10 +50,30 @@ function criaElemento(item) {
     novoItem.appendChild(numeroItem); //adiciona dentro do novoItem o filho numeroItem
     novoItem.innerHTML += item.nome; //adiciona o valor dentro de novo item
 
+    novoItem.appendChild(botaoDeleta(item.id));
     lista.appendChild(novoItem); //Adiciona a lista existente o filho novoItem
 
 }
 
 function atualizaElemento(item) {
     document.querySelector("[data-id='"+item.id+"']").innerHTML = item.quantidade;
+}
+
+function botaoDeleta(id) {
+    const elementoBotao = document.createElement("button");
+    elementoBotao.innerText = "x";
+
+    elementoBotao.addEventListener("click", function() {
+        deletaElemento(this.parentNode, id);
+    });
+
+    return elementoBotao;
+}
+
+function deletaElemento(tag, id) {
+    tag.remove();
+
+    itens.splice(itens.findIndex(elemento => elemento.id == id), 1);
+
+    localStorage.setItem("itens", JSON.stringify(itens));
 }
